@@ -1,0 +1,42 @@
+
+
+    # Desenha as pastas na tela
+    pastas = Funcao.listar_conteudo(pasta_Musica)
+    musicas = Funcao.listar_conteudo(pasta_Musica)
+    y_offset = 50
+    for pasta in pastas:
+        texto = fonte_titulo.render(f"{pasta}", True, (0, 0, 0))
+        screen.blit(texto, (50, y_offset))
+        y_offset += 40
+    # Desenha as músicas na tela
+    for musica in musicas:
+        texto = fonte_titulo.render(f"{musica}\n", True, (0, 0, 0))
+        screen.blit(texto, (50, y_offset))
+        y_offset += 40
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Clique do mouse
+        pos = pygame.mouse.get_pos()
+        y_offset = 50   
+
+           
+        # Verifica se um item foi clicado
+        for pasta in pastas:
+            if y_offset <= pos[1] <= y_offset + 40:
+                diretorio_atual = os.path.join(pasta_Musica, pasta)  # Navega para a pasta
+                screen.fill(Funcao.cor('white'))
+                #titulo MusicFlow
+                Funcao.Titulo(screen, "MusicFlow", cor_titulo =Funcao.cor('black'), fonte = fonte_titulo)
+                musicas = Funcao.listar_conteudo(diretorio_atual)
+                for musica in musicas:
+                    texto = fonte_titulo.render(f"{musica}\n", True, (0, 0, 0))
+                    screen.blit(texto, (50, y_offset))           
+            y_offset += 40
+
+        for musica in musicas:
+            if y_offset <= pos[1] <= y_offset + 40:
+                Funcao.tocar_musica(musica)  # Toca a música
+                break
+            y_offset += 40
+
+
+
+    
