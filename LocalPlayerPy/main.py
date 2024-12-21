@@ -24,44 +24,38 @@ fonte = "Impact"
 fonte_titulo = pygame.font.SysFont(fonte, 30)
 
 
-def Home(texto, pos, cor_texto, cor_rect=(255,255,255)):
-    texto_surface = fonte_titulo.render(texto, True, cor_texto)
-    texto_rect = texto_surface.get_rect(center=pos)
-
-    pygame.draw.rect(screen, cor_rect,texto_rect.inflate(20, 20), border_radius=10)
-    screen.blit(texto_surface, texto_rect)
-
-    return texto_rect
-
-
 while True:
+    screen.fill(Funcao.cor('gray'))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        
         if event.type == pygame.VIDEORESIZE:
             SCREEN_WIDTH, SCREEN_HEIGHT = event.w, event.h
-            if SCREEN_HEIGHT < int(info_tela.current_h/2):
-                SCREEN_HEIGHT = int(info_tela.current_h/2)
-            if SCREEN_WIDTH < int(info_tela.current_w/5):
-                SCREEN_WIDTH = int(info_tela.current_w/5)
+            if SCREEN_HEIGHT < int(450):
+                SCREEN_HEIGHT = int(450)
+            if SCREEN_WIDTH < int(300):
+                SCREEN_WIDTH = int(300)
             screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
-    #screen.fill(Funcao.cor('white'))
+    
+   
+    #texto_retangulo = Home("MusicFlow", pos=(100,30), cor_texto=Funcao.cor('black'))
     
 
-    screen.fill(Funcao.cor('gray'))
-    texto_retangulo = Home("MusicFlow", pos=(100,30), cor_texto=Funcao.cor('black'))
+    # if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
+    #         if event.button == 1: 
+    #             if texto_retangulo.collidepoint(event.pos):
+    #                 screen.fill(Funcao.cor('white'))
+    #                 texto_retangulo = Home("MusicFlow", pos=(100,30), cor_texto=Funcao.cor('black'))
     
-
-    if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1: 
-                if texto_retangulo.collidepoint(event.pos):
-                    screen.fill(Funcao.cor('white'))
-                    texto_retangulo = Home("MusicFlow", pos=(100,30), cor_texto=Funcao.cor('black'))
+    if Funcao.desenhar_botao(30, 30, 100, 30, "MusicFlow", 'white', 'blue'):
+        screen.fill(Funcao.cor('white'))
+        
     
-
- 
+    if Funcao.desenhar_botao(30, 100, 200, 30, "Clique Aqui", 'white', 'blue'):
+        print('botão clicado')
 
     pygame.display.flip()
     pygame.display.update()
-    clock.tick(10)
+    clock.tick(30)
