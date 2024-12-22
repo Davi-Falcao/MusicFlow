@@ -1,60 +1,86 @@
+import sys
+import os
 import pygame
+import Funcao
 
-# Inicializar o pygame
+# Funções auxiliares
+def desenhar_botao(screen, x, y, largura, altura, texto, cor, cor_hover):
+    Posicao_Mouse = pygame.mouse.get_pos()
+    Clique_Mouse = pygame.mouse.get_pressed()
+    
+    fonte_botao = pygame.font.SysFont('Arial', 20)
+    texto_botao = fonte_botao.render(texto, True, (0, 0, 0))
+    
+    if x < Posicao_Mouse[0] < x + largura and y < Posicao_Mouse[1] < y + altura:
+        pygame.draw.rect(screen, cor_hover, (x, y, largura, altura), border_radius=10)
+        
+        if Clique_Mouse[0]:  # Clique esquerdo
+            return True
+    else:
+        pygame.draw.rect(screen, cor, (x, y, largura, altura), border_radius=10)
+
+    screen.blit(texto_botao, (x + 10, y + 5))
+    return False
+
+def titulo(screen, titulo, cor_titulo):
+    fonte = pygame.font.SysFont('Arial', 30)
+    texto = fonte.render(titulo, True, cor_titulo)
+    screen.blit(texto, (10, 10))
+
+# Inicializando Pygame
 pygame.init()
+pygame.mixer.init()
+pygame.display.set_caption("MusicFlow")
+icone = pygame.image.load('./LocalPlayerPy/icone/MusicFlow.ico') 
+pygame.display.set_icon(icone)
 
-# Configurar a tela
-screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Texto com Retângulo Clicável")
+# Tela
+info_tela = pygame.display.Info()
+SCREEN_WIDTH = int(info_tela.current_w / 2)
+SCREEN_HEIGHT = int(info_tela.current_h / 1.5)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+clock = pygame.time.Clock()
 
-# Configurar fontes e cores
-fonte_titulo = pygame.font.Font(None, 72)  # Fonte do título
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-BLUE = (0, 123, 255)
+# Variável para controlar as telas
+tela_atual = "principal"
 
-# Funcao para renderizar texto e desenhar retângulo clicável
-def desenhar_texto_clicavel(screen, texto, pos, fonte, cor_texto, cor_retangulo):
-    # Renderizar o texto
-    texto_surface = fonte.render(texto, True, cor_texto)
-    texto_rect = texto_surface.get_rect(center=pos)
-
-    # Desenhar o retângulo ao redor do texto
-    pygame.draw.rect(screen, cor_retangulo, texto_rect.inflate(20, 20), border_radius=10)
-
-    # Desenhar o texto na tela
-    screen.blit(texto_surface, texto_rect)
-
-    return texto_rect  # Retorna o retângulo para detectar clique
+# Cores
+COR_GRAY = (200, 200, 200)
+COR_WHITE = (255, 255, 255)
+COR_BLUE = (0, 0, 255)
+COR_RED = (255, 0, 0)
+COR_YELLOW = (255, 255, 0)
+COR_CYAN = (0, 255, 255)
 
 # Loop principal
-running = True
-while running:
+while True:
+    screen.fill(COR_GRAY)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-
-        # Detectar clique do mouse
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Clique esquerdo
-            mouse_pos = event.pos
-            if texto_retangulo.collidepoint(mouse_pos):
-                print("Texto clicado!")
-
-    # Preencher a tela com branco
-    screen.fill(WHITE)
-
-    # Desenhar o título e obter o retângulo clicável
-    texto_retangulo = desenhar_texto_clicavel(
-        screen,
-        "MusicFlow",
-        pos=(400, 300),  # Posição centralizada
-        fonte=fonte_titulo,
-        cor_texto=BLACK,
-        cor_retangulo=BLUE,
-    )
-
-    # Atualizar a tela
+            pygame.quit()
+            sys.exit()
+        
+        if event.type == pygame.VIDEORESIZE:
+            SCREEN_WIDTH, SCREEN_HEIGHT = event.w, event.h
+            if SCREEN_HEIGHT < 450:
+                SCREEN_HEIGHT = 450
+            if SCREEN_WIDTH < 300:
+                SCREEN_WIDTH = 300
+            screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+    
+    # Verificando qual tela exibir
+    if tela_atual == "principal":
+        # Tela principal
+        titulo(screen, "Tela Principal", COR_WHITE)
+        if desenhar_botao(screen, 60, 60, 200, 60, "Ir para Outra Tela", COR_WHITE, COR_BLUE):
+            tela_atual = "outra_tela"
+        
+    elif tela_atual == "outra_tela":
+        # Outra tela
+        screen.fill(Funcao.cor('white'))
+        titulo(screen, "Outra Tela", COR_YELLOW)
+        if desenhar_botao(screen, 60, 60, 200, 60, "Voltar", COR_RED, COR_GRAY):
+            tela_atual = "principal"
+    
     pygame.display.flip()
-
-# Finalizar o pygame
-pygame.quit()
+    clock.tick(10)
