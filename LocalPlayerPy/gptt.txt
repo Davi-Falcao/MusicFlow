@@ -1,41 +1,137 @@
 
+#Arquivo principal
 
-    # Desenha as pastas na tela
-    pastas = Funcao.listar_conteudo(pasta_Musica)
-    musicas = Funcao.listar_conteudo(pasta_Musica)
-    y_offset = 50
-    for pasta in pastas:
-        texto = fonte_titulo.render(f"{pasta}", True, (0, 0, 0))
-        screen.blit(texto, (50, y_offset))
-        y_offset += 40
-    # Desenha as músicas na tela
-    for musica in musicas:
-        texto = fonte_titulo.render(f"{musica}\n", True, (0, 0, 0))
-        screen.blit(texto, (50, y_offset))
-        y_offset += 40
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Clique do mouse
-        pos = pygame.mouse.get_pos()
-        y_offset = 50   
+import sys
+import os
+import pygame
+import Funcao
 
-           
-        # Verifica se um item foi clicado
-        for pasta in pastas:
-            if y_offset <= pos[1] <= y_offset + 40:
-                diretorio_atual = os.path.join(pasta_Musica, pasta)  # Navega para a pasta
-                screen.fill(Funcao.cor('white'))
-                #titulo MusicFlow
-                Funcao.Titulo(screen, "MusicFlow", cor_titulo =Funcao.cor('black'), fonte = fonte_titulo)
-                musicas = Funcao.listar_conteudo(diretorio_atual)
-                for musica in musicas:
-                    texto = fonte_titulo.render(f"{musica}\n", True, (0, 0, 0))
-                    screen.blit(texto, (50, y_offset))           
-            y_offset += 40
+user_home_directory = os.path.expanduser("~")
+pasta_Musica = f'{user_home_directory}\\Music\\'
 
-        for musica in musicas:
-            if y_offset <= pos[1] <= y_offset + 40:
-                Funcao.tocar_musica(musica)  # Toca a música
-                break
-            y_offset += 40
+#Inicializando Pygame
+pygame.init()
+pygame.mixer.init()
+pygame.display.set_caption("MusicFlow")
+icone = pygame.image.load('.\\LocalPlayerPy\\icone\\MusicFlow.ico') 
+pygame.display.set_icon(icone)
+
+#Tela
+info_tela = pygame.display.Info()
+SCREEN_WIDTH = int(info_tela.current_w/2)
+SCREEN_HEIGHT = int(info_tela.current_h/1.5)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+clock = pygame.time.Clock()
+
+fonte = "Impact"
+fonte_titulo = pygame.font.SysFont(fonte, 30)
+
+
+while True:
+    screen.fill(Funcao.cor('gray'))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        
+        if event.type == pygame.VIDEORESIZE:
+            SCREEN_WIDTH, SCREEN_HEIGHT = event.w, event.h
+            if SCREEN_HEIGHT < int(450):
+                SCREEN_HEIGHT = int(450)
+            if SCREEN_WIDTH < int(300):
+                SCREEN_WIDTH = int(300)
+            screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
+    if Funcao.desenhar_botao(x=100, y=30, pos=(100,30), texto="MusicFlow", cor='white', cor_hover='blue'):
+        screen.fill(Funcao.cor('white'))
+    #Funcao.Home('oidadjawijdaiwjpawdjapwj', pos=(100, 30), cor_texto=(0, 0, 0), cor_rect=(255, 255, 255) )    
+    
+    if Funcao.desenhar_botao(x=100, y=100, pos=(100, 100), texto="Clique Aqui", cor='white', cor_hover='blue'):
+        print('botão clicado')
+
+    pygame.display.flip()
+    pygame.display.update()
+    clock.tick(10)
+
+
+
+
+
+
+
+
+#Arquivo de funcao
+import pygame
+import os
+
+pygame.init()
+info_tela = pygame.display.Info()
+SCREEN_WIDTH = int(info_tela.current_w/2)
+SCREEN_HEIGHT = int(info_tela.current_h/1.5)
+user_home_directory = os.path.expanduser("~")
+pasta_Musica = f'{user_home_directory}\\Music\\'
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
+fonte = "Impact"
+fonte_titulo = pygame.font.SysFont(fonte, 30)
+
+
+
+def Home(texto, pos, cor_texto, cor_rect=(255,255,255)):
+    texto_surface = fonte_titulo.render(texto, True, cor_texto)
+    texto_rect = texto_surface.get_rect(center=pos)
+
+    pygame.draw.rect(screen, cor_rect,texto_rect.inflate(20, 20), border_radius=10)
+    screen.blit(texto_surface, texto_rect)
+
+    return texto_rect
+
+def desenhar_botao(x, y ,pos , texto, cor, cor_hover):
+    Posicao_Mouse = pygame.mouse.get_pos()
+    Clique_Mouse = pygame.mouse.get_pressed()
+    text_surface = fonte_titulo.render(texto, True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=pos)
+    
+    if x < Posicao_Mouse[0] < (x + pos[0]) and y < Posicao_Mouse[1] < (y + pos[1]) : #O [0] significa posição do mouse no eixo X, e o [1] significa posição do mouse no eixo y
+        pygame.draw.rect(screen, pygame.Color(cor_hover), text_rect.inflate(20, 20), border_radius=10)
+ 
+        if Clique_Mouse[0]:  # O [0] significa botão esquerdo
+            pygame.display.update()
+            return True
+    else:
+        pygame.draw.rect(screen, pygame.Color(cor), text_rect.inflate(20, 20), border_radius = 10)
+      
+    
+    #Desenhando o texto
+    screen.blit(text_surface, text_rect)
+    pygame.display.update()
+    return False
+
+def cor(nome_cor):
+    cor = pygame.Color(nome_cor)  
+    return (cor.r, cor.g, cor.b)
+
+def Titulo(screen, titulo, cor_titulo, fonte = None):
+    if fonte is None:
+        fonte = pygame.font.SysFont('Arial', 30)
+    
+    texto = fonte.render(titulo, True, cor_titulo)
+
+    screen.blit(texto, (10, 10))
+
+def listar_conteudo(diretorio):
+    conteudo = os.listdir(diretorio)
+    pastas = [item for item in conteudo if os.path.isdir(os.path.join(diretorio, item))]
+    musicas = [item for item in conteudo if item.endswith('.mp3') or item.endswith('.wav') or item.endswith('.mp4')]
+    return pastas, musicas
+
+
+def tocar_musica(musica):
+    caminho_musica = os.path.join(pasta_Musica, musica)  # Caminho completo para a música
+    pygame.mixer.music.load(caminho_musica)  # Carrega a música
+    pygame.mixer.music.play()  # Toca a música
+
+
 
 
 
