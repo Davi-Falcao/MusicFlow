@@ -30,8 +30,10 @@ tela_principal = 'principal'
 # Função para ajustar o tamanho da tela
 def ajustar_tamanho_tela(largura, altura, redimensionavel=True):
     global screen
-    flags = pygame.RESIZABLE if redimensionavel else 0
-    screen = pygame.display.set_mode((largura, altura), flags)
+    Redmensionavel = pygame.RESIZABLE if redimensionavel else 0
+    screen = pygame.display.set_mode((largura, altura), Redmensionavel)
+
+Funcao_Listar_Diretorio = Funcao.listar_conteudo(pasta_Musica)[0]
 
 while True:
     # Ajustar o tamanho da tela com base na tela atual
@@ -50,21 +52,35 @@ while True:
     if tela_principal == 'principal':
         if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
             tela_principal = 'principal'
-        if Funcao.desenhar_botao(screen, 20, 100, texto="Botao", cor='white', cor_hover='blue'):    
-            tela_principal = 'botao'    
+        if Funcao.desenhar_botao(screen, 20, 100, texto="Pastas", cor='white', cor_hover='blue'):    
+            tela_principal = 'pasta'    
         if Funcao.desenhar_botao(screen, 20, 170, texto="Music", cor='white', cor_hover='blue'):
             tela_principal = 'musica'
     
-    elif tela_principal == 'botao':
+    elif tela_principal == 'pasta':
         if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
             tela_principal = 'principal'
-        if Funcao.desenhar_botao(screen, 20, 100, texto="Clique Aqui", cor='white', cor_hover='blue'):
-            print('botão clicado')
+        y_pos = 100  # Posição inicial no eixo Y
+        for pasta in Funcao_Listar_Diretorio:
+            if Funcao.desenhar_botao(screen, 20, y_pos, texto=pasta, cor='white', cor_hover='blue'):
+                tela_principal = 'Playlist'
+            y_pos += 70  # Ajuste o espaçamento entre os botões
     
-    elif tela_principal == 'musica':
+    elif tela_principal == 'musica':    
         if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
             tela_principal = 'principal'
-
+    
+    elif tela_principal == 'Playlist':
+        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
+                tela_principal = 'principal'
+        y_pos = 100
+        for pasta in Funcao_Listar_Diretorio:
+            Funcao_Listar_Musica = Funcao.listar_conteudo(f'{pasta_Musica}\\{pasta}')[1]
+            for musica in Funcao_Listar_Musica:
+                if Funcao.desenhar_botao(screen, 20, y_pos, texto=musica, cor='white', cor_hover='blue'):
+                    tela_principal = 'Playlist'
+                y_pos += 70  # Ajuste o espaçamento entre os botões
+        
     # Eventos
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -78,6 +94,6 @@ while True:
             if SCREEN_WIDTH < 300:
                 SCREEN_WIDTH = 300
             ajustar_tamanho_tela(SCREEN_WIDTH, SCREEN_HEIGHT, redimensionavel=True)
-
+    
     pygame.display.flip()
     clock.tick(30)
