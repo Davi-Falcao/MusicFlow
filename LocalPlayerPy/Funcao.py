@@ -3,8 +3,10 @@ import os
 
 pygame.init()
 info_tela = pygame.display.Info()
-SCREEN_WIDTH = int(info_tela.current_w/2)
-SCREEN_HEIGHT = int(info_tela.current_h/1.5)
+SCREEN_WIDTH = int(info_tela.current_w / 2)
+SCREEN_HEIGHT = int(info_tela.current_h / 1.5)
+MUSIC_SCREEN_WIDTH = 330
+MUSIC_SCREEN_HEIGHT = 480
 user_home_directory = os.path.expanduser("~")
 pasta_Musica = f'{user_home_directory}\\Music\\'
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
@@ -12,47 +14,38 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE
 fonte = "Impact"
 fonte_titulo = pygame.font.SysFont(fonte, 30)
 
-def desenhar_botao(screen, x, y, texto, cor, cor_hover):
-    # Obtemos a posição do mouse e o estado de clique
+def desenhar_botao(screen, x, y, texto=None, cor='white', cor_hover='blue', imagem=None):
+   
     posicao_mouse = pygame.mouse.get_pos()
     clique_mouse = pygame.mouse.get_pressed()
 
-    # Renderizando o texto do botão
-    text_surface = fonte_titulo.render(texto, True, (0, 0, 0))
-    text_rect = text_surface.get_rect(topleft=(x, y))
+    # Determinar o tamanho e posição do botão
+    if imagem:
+        imagem_surface = pygame.image.load(imagem)
+        botao_rect = imagem_surface.get_rect(topleft=(x, y))
+    else:
+        text_surface = fonte_titulo.render(texto, True, (0, 0, 0))
+        botao_rect = text_surface.get_rect(topleft=(x, y))
 
-    # Verificando se o mouse está sobre o botão
-    if text_rect.collidepoint(posicao_mouse):
-        pygame.draw.rect(screen, pygame.Color(cor_hover), text_rect.inflate(20, 20), border_radius=10)
+    # Alterar cor do botão se o mouse estiver sobre ele
+    if botao_rect.collidepoint(posicao_mouse):
+        pygame.draw.rect(screen, pygame.Color(cor_hover), botao_rect.inflate(20, 20), border_radius=10)
         if clique_mouse[0]:  # Botão esquerdo do mouse foi clicado
             return True
     else:
-        pygame.draw.rect(screen, pygame.Color(cor), text_rect.inflate(20, 20), border_radius=10)
+        pygame.draw.rect(screen, pygame.Color(cor), botao_rect.inflate(20, 20), border_radius=10)
 
-    # Desenhando o texto do botão
-    screen.blit(text_surface, text_rect)
-    
+    # Renderizar imagem ou texto
+    if imagem:
+        screen.blit(imagem_surface, botao_rect)
+    else:
+        screen.blit(text_surface, botao_rect)
+
     return False
 
 def cor(nome_cor):
     cor = pygame.Color(nome_cor)  
     return (cor.r, cor.g, cor.b)
-
-def Home(screen, texto, pos, cor_texto, cor_rect=(255, 255, 255)):
-    texto_surface = fonte_titulo.render(texto, True, cor_texto)
-    texto_rect = texto_surface.get_rect(center=pos)
-
-    pygame.draw.rect(screen, cor_rect, texto_rect.inflate(20, 20), border_radius=10)
-    screen.blit(texto_surface, texto_rect)
-
-    return texto_rect
-
-def Titulo(screen, titulo, cor_titulo, fonte=None):
-    if fonte is None:
-        fonte = pygame.font.SysFont('Arial', 30)
-    
-    texto = fonte.render(titulo, True, cor_titulo)
-    screen.blit(texto, (10, 10))
 
 def listar_conteudo(diretorio):
     conteudo = os.listdir(diretorio)
@@ -64,9 +57,3 @@ def tocar_musica(musica):
     caminho_musica = os.path.join(pasta_Musica, musica)  # Caminho completo para a música
     pygame.mixer.music.load(caminho_musica)  # Carrega a música
     pygame.mixer.music.play()  # Toca a música
-
-def pausar_musica(musica):
-    caminho_musica = os.path.join(pasta_Musica, musica)
-    pygame.mixer.music.load(caminho_musica)
-    pygame.mixer.music.pause()
-
