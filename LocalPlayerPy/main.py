@@ -27,7 +27,7 @@ fonte = "Impact"
 fonte_titulo = pygame.font.SysFont(fonte, 30)
 tela_principal = 'principal'
 musica_selecionada = ''
-is_paused = False  # Variável global para o estado de pausa
+is_paused = False 
 
 #Imagens
 botao_pause = f'.\\LocalPlayerPy\\imagens\\pause.png'
@@ -105,9 +105,6 @@ while True:
                     musica_selecionada = musica
                     tela_principal = 'musica'
                 y_pos += 70
-
-
-
 
     # Eventos
     for event in pygame.event.get():

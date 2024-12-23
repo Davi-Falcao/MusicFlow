@@ -19,7 +19,6 @@ def desenhar_botao(screen, x, y, texto=None, cor='white', cor_hover='blue', imag
     posicao_mouse = pygame.mouse.get_pos()
     clique_mouse = pygame.mouse.get_pressed()
 
-    # Determinar o tamanho e posição do botão
     if imagem:
         imagem_surface = pygame.image.load(imagem)
         botao_rect = imagem_surface.get_rect(topleft=(x, y))
@@ -27,7 +26,6 @@ def desenhar_botao(screen, x, y, texto=None, cor='white', cor_hover='blue', imag
         text_surface = fonte_titulo.render(texto, True, (0, 0, 0))
         botao_rect = text_surface.get_rect(topleft=(x, y))
 
-    # Alterar cor do botão se o mouse estiver sobre ele
     if botao_rect.collidepoint(posicao_mouse):
         pygame.draw.rect(screen, pygame.Color(cor_hover), botao_rect.inflate(20, 20), border_radius=10)
         if clique_mouse[0]:  # Botão esquerdo do mouse foi clicado
@@ -35,7 +33,6 @@ def desenhar_botao(screen, x, y, texto=None, cor='white', cor_hover='blue', imag
     else:
         pygame.draw.rect(screen, pygame.Color(cor), botao_rect.inflate(20, 20), border_radius=10)
 
-    # Renderizar imagem ou texto
     if imagem:
         screen.blit(imagem_surface, botao_rect)
     else:
@@ -54,6 +51,6 @@ def listar_conteudo(diretorio):
     return pastas, musicas
 
 def tocar_musica(musica):
-    caminho_musica = os.path.join(pasta_Musica, musica)  # Caminho completo para a música
-    pygame.mixer.music.load(caminho_musica)  # Carrega a música
-    pygame.mixer.music.play()  # Toca a música
+    caminho_musica = os.path.join(pasta_Musica, musica)
+    pygame.mixer.music.load(caminho_musica)
+    pygame.mixer.music.play()
