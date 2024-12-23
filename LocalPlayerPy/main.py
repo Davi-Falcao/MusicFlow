@@ -33,7 +33,11 @@ def ajustar_tamanho_tela(largura, altura, redimensionavel=True):
     Redmensionavel = pygame.RESIZABLE if redimensionavel else 0
     screen = pygame.display.set_mode((largura, altura), Redmensionavel)
 
+
 Funcao_Listar_Diretorio = Funcao.listar_conteudo(pasta_Musica)[0]
+pasta_selecionada = ''
+
+
 
 while True:
     # Ajustar o tamanho da tela com base na tela atual
@@ -46,7 +50,6 @@ while True:
             SCREEN_HEIGHT = int(1080 / 1.5)
             ajustar_tamanho_tela(SCREEN_WIDTH, SCREEN_HEIGHT, redimensionavel=True)
 
-    # Preencher o fundo
     screen.fill(Funcao.cor('grey'))
 
     if tela_principal == 'principal':
@@ -63,6 +66,7 @@ while True:
         y_pos = 100  # Posição inicial no eixo Y
         for pasta in Funcao_Listar_Diretorio:
             if Funcao.desenhar_botao(screen, 20, y_pos, texto=pasta, cor='white', cor_hover='blue'):
+                pasta_selecionada = pasta
                 tela_principal = 'Playlist'
             y_pos += 70  # Ajuste o espaçamento entre os botões
     
@@ -73,14 +77,14 @@ while True:
     elif tela_principal == 'Playlist':
         if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
                 tela_principal = 'principal'
-        y_pos = 100
-        for pasta in Funcao_Listar_Diretorio:
-            Funcao_Listar_Musica = Funcao.listar_conteudo(f'{pasta_Musica}\\{pasta}')[1]
+        if pasta_selecionada:
+            Funcao_Listar_Musica = Funcao.listar_conteudo(f'{pasta_Musica}\\{pasta_selecionada}')[1]
+            y_pos = 100
             for musica in Funcao_Listar_Musica:
                 if Funcao.desenhar_botao(screen, 20, y_pos, texto=musica, cor='white', cor_hover='blue'):
-                    tela_principal = 'Playlist'
-                y_pos += 70  # Ajuste o espaçamento entre os botões
-        
+                    tela_principal = 'musica'
+                    Funcao.tocar_musica((f'{pasta_Musica}\\{pasta_selecionada}\\{musica}'))
+                y_pos += 70          
     # Eventos
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -96,4 +100,4 @@ while True:
             ajustar_tamanho_tela(SCREEN_WIDTH, SCREEN_HEIGHT, redimensionavel=True)
     
     pygame.display.flip()
-    clock.tick(30)
+    clock.tick(13)

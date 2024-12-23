@@ -64,3 +64,9 @@ def tocar_musica(musica):
     caminho_musica = os.path.join(pasta_Musica, musica)  # Caminho completo para a música
     pygame.mixer.music.load(caminho_musica)  # Carrega a música
     pygame.mixer.music.play()  # Toca a música
+
+def pausar_musica(musica):
+    caminho_musica = os.path.join(pasta_Musica, musica)
+    pygame.mixer.music.load(caminho_musica)
+    pygame.mixer.music.pause()
+
