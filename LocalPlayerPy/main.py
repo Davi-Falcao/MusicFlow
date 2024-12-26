@@ -56,19 +56,19 @@ while True:
     screen.fill(Funcao.cor('grey'))
 
     if tela_principal == 'principal':
-        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
+        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='yellow'):
             tela_principal = 'principal'
-        if Funcao.desenhar_botao(screen, 20, 100, texto="Pastas", cor='white', cor_hover='blue'):    
+        if Funcao.desenhar_botao(screen, 20, 100, texto="Pastas", cor='white', cor_hover='yellow'):    
             tela_principal = 'pasta'    
-        if Funcao.desenhar_botao(screen, 20, 170, texto="Music", cor='white', cor_hover='blue'):
+        if Funcao.desenhar_botao(screen, 20, 170, texto="Music", cor='white', cor_hover='yellow'):
             tela_principal = 'musica'
     
     elif tela_principal == 'pasta':
-        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
+        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='yellow'):
             tela_principal = 'principal'
         y_pos = 100  # Posição inicial no eixo Y
         for pasta in Funcao_Listar_Diretorio:
-            if Funcao.desenhar_botao(screen, 20, y_pos, texto=pasta, cor='white', cor_hover='blue'):
+            if Funcao.desenhar_botao(screen, 20, y_pos, texto=pasta, cor='white', cor_hover='yellow'):
                 pasta_selecionada = pasta
                 tela_principal = 'Playlist'
             y_pos += 70  # Ajuste o espaçamento entre os botões
@@ -78,7 +78,7 @@ while True:
             botao = botao_despause
         else:
             botao = botao_pause
-        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
+        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='yellow'):
             tela_principal = 'principal'
         
         fonte_musica = pygame.font.SysFont("Impact", 12)
@@ -86,7 +86,7 @@ while True:
         botao_rect = text_surface.get_rect(topleft=(20, 250))
         screen.blit(text_surface, botao_rect)
         
-        if Funcao.desenhar_botao(screen, (MUSIC_SCREEN_WIDTH//2 - 20), 350, imagem=botao, cor='white', cor_hover='blue'):
+        if Funcao.desenhar_botao(screen, (MUSIC_SCREEN_WIDTH//2 - 20), 350, imagem=botao, cor='white', cor_hover='yellow'):
             if not is_paused:
                 pygame.mixer.music.pause()
             else:
@@ -94,13 +94,13 @@ while True:
             is_paused = not is_paused  
 
     elif tela_principal == 'Playlist':
-        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='blue'):
+        if Funcao.desenhar_botao(screen, 20, 30, texto="MusicFlow", cor='white', cor_hover='yellow'):
             tela_principal = 'principal'
         if pasta_selecionada:
             Funcao_Listar_Musica = Funcao.listar_conteudo(f'{pasta_Musica}\\{pasta_selecionada}')[1]
             y_pos = 100
             for musica in Funcao_Listar_Musica:
-                if Funcao.desenhar_botao(screen, 20, y_pos, texto=musica, cor='white', cor_hover='blue'):
+                if Funcao.desenhar_botao(screen, 20, y_pos, texto=musica, cor='white', cor_hover='yellow'):
                     Funcao.tocar_musica(f'{pasta_Musica}\\{pasta_selecionada}\\{musica}')
                     musica_selecionada = musica
                     tela_principal = 'musica'
