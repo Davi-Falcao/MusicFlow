@@ -33,8 +33,8 @@ scroll_speed = 20  # Velocidade do scroll
 scroll_limit = 0  # Limite do scroll para impedir sair da área visível
 
 # Definindo uma área específica para o conteúdo rolável (ex: 300x400 px)
-SCROLL_AREA_WIDTH = 300
-SCROLL_AREA_HEIGHT = 400
+SCROLL_AREA_WIDTH = SCREEN_WIDTH
+SCROLL_AREA_HEIGHT = SCREEN_HEIGHT - 150
 scroll_area = pygame.Rect(50, 100, SCROLL_AREA_WIDTH, SCROLL_AREA_HEIGHT)
 
 # Função para ajustar o tamanho da tela
@@ -80,6 +80,9 @@ while True:
         # Calculando o limite do scroll
         scroll_limit = calcular_scroll_limite(Funcao_Listar_Diretorio, 70, SCROLL_AREA_HEIGHT)
 
+        # Garantir que o scroll_offset não seja maior que 0 (para evitar espaço vazio no topo)
+        scroll_offset = min(scroll_offset, 0)
+
         # Criar uma superfície para desenhar os itens de rolagem
         scroll_surface = pygame.Surface((SCROLL_AREA_WIDTH, SCROLL_AREA_HEIGHT))
 
@@ -90,7 +93,7 @@ while True:
         y_pos = scroll_offset  # Aplicando o offset de scroll
 
         for pasta in Funcao_Listar_Diretorio:
-            if Funcao.desenhar_botao(scroll_surface, 20, y_pos, texto=pasta, cor='white', cor_hover='blue'):
+            if Funcao.desenhar_botao(scroll_surface, 20, y_pos, texto=pasta, cor='white', cor_hover='blue', offset_x=scroll_area.x, offset_y=scroll_area.y):
                 pasta_selecionada = pasta
                 tela_principal = 'Playlist'
             y_pos += 70  # Ajuste o espaçamento entre os botões
@@ -111,6 +114,9 @@ while True:
             # Calculando o limite do scroll para músicas
             scroll_limit = calcular_scroll_limite(Funcao_Listar_Musica, 70, SCROLL_AREA_HEIGHT)
 
+            # Garantir que o scroll_offset não seja maior que 0 (para evitar espaço vazio no topo)
+            scroll_offset = min(scroll_offset, 0)
+
             # Criar uma superfície para desenhar os itens de rolagem
             scroll_surface = pygame.Surface((SCROLL_AREA_WIDTH, SCROLL_AREA_HEIGHT))
 
@@ -120,7 +126,7 @@ while True:
             y_pos = scroll_offset  # Aplicando o offset de scroll
 
             for musica in Funcao_Listar_Musica:
-                if Funcao.desenhar_botao(scroll_surface, 20, y_pos, texto=musica, cor='white', cor_hover='blue'):
+                if Funcao.desenhar_botao(scroll_surface, 20, y_pos, texto=musica, cor='white', cor_hover='blue', offset_x=scroll_area.x, offset_y=scroll_area.y):
                     tela_principal = 'musica'
                     Funcao.tocar_musica(f'{pasta_Musica}\\{pasta_selecionada}\\{musica}')
                 y_pos += 70  # Ajuste o espaçamento entre os botões
@@ -148,4 +154,4 @@ while True:
             scroll_offset = max(min(scroll_offset, 0), scroll_limit)
 
     pygame.display.flip()
-    clock.tick(30)
+    clock.tick(10)
