@@ -5,8 +5,8 @@ pygame.init()
 info_tela = pygame.display.Info()
 SCREEN_WIDTH = int(info_tela.current_w / 2)
 SCREEN_HEIGHT = int(info_tela.current_h / 1.5)
-#MUSIC_SCREEN_WIDTH = 330
-#MUSIC_SCREEN_HEIGHT = 480
+MUSIC_SCREEN_WIDTH = 330
+MUSIC_SCREEN_HEIGHT = 480
 user_home_directory = os.path.expanduser("~")
 pasta_Musica = f'{user_home_directory}\\Music\\'
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
@@ -44,7 +44,6 @@ def desenhar_botao(screen, x, y, texto=None, cor='white', cor_hover='blue', imag
         screen.blit(text_surface, botao_rect)
 
     return False
-
 
 def cor(nome_cor):
     cor = pygame.Color(nome_cor)  
