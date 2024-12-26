@@ -1,6 +1,3 @@
-import sys
-import os
-import pygame
 import Funcao
 
 user_home_directory = os.path.expanduser("~")
@@ -128,6 +125,7 @@ while True:
             for musica in Funcao_Listar_Musica:
                 if Funcao.desenhar_botao(scroll_surface, 20, y_pos, texto=musica, cor='white', cor_hover='blue', offset_x=scroll_area.x, offset_y=scroll_area.y):
                     tela_principal = 'musica'
+                    musica_selecionada = musica
                     Funcao.tocar_musica(f'{pasta_Musica}\\{pasta_selecionada}\\{musica}')
                 y_pos += 70  # Ajuste o espaçamento entre os botões
 
@@ -155,3 +153,4 @@ while True:
 
     pygame.display.flip()
     clock.tick(10)
+
